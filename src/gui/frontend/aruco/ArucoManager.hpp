@@ -2,15 +2,64 @@
 
 #include <vector>
 #include <string>
-#include <d3d11.h>
 #include "../../../external/imgui/imgui.h"
 #include "../../../external/AsyncLogger/include/AsyncLogger/Logger.hpp"
+
+#ifdef _WIN32
+#include <d3d11.h>
+#else
+// Dummy definitions for non-Windows compilation
+// These will allow the code to compile on macOS but will not provide actual functionality
+struct ID3D11Device {};
+struct ID3D11ShaderResourceView {
+    void Release() { /* do nothing */ }
+};
+
+struct D3D11_TEXTURE2D_DESC {
+    unsigned int Width;
+    unsigned int Height;
+    unsigned int MipLevels;
+    unsigned int ArraySize;
+    unsigned int Format;
+    struct {
+        unsigned int Count;
+        unsigned int Quality;
+    } SampleDesc;
+    unsigned int Usage;
+    unsigned int BindFlags;
+    unsigned int CPUAccessFlags;
+    unsigned int MiscFlags;
+};
+
+struct D3D11_SUBRESOURCE_DATA {
+    const void* pSysMem;
+    unsigned int SysMemPitch;
+    unsigned int SysMemSlicePitch;
+};
+
+struct ID3D11Texture2D {
+    void Release() { /* do nothing */ }
+};
+
+using HRESULT = int;
+#define DXGI_FORMAT_R8G8B8A8_UNORM 0
+#define D3D11_USAGE_DEFAULT 0
+#define D3D11_BIND_SHADER_RESOURCE 0
+#define D3D11_SRV_DIMENSION_TEXTURE2D 0
+#define FAILED(hr) (hr < 0)
+
+#endif
 
 // stb_image for PNG loading
 #include "../../../external/stb/stb_image.h"
 
 // Forward declare Window's device
 class Window;
+
+// Forward declare stb_image functions (defined in Renderer.cpp with STB_IMAGE_IMPLEMENTATION)
+unsigned char* stbi_load(const char* filename, int* x, int* y, int* channels_in_file, int desired_channels);
+void stbi_image_free(void* retval_from_stbi_load);
+
 
 class ArucoManager {
 public:
@@ -69,7 +118,9 @@ private:
     void DestroyImpl() {
         for (auto& texture : textures) {
             if (texture) {
+#ifdef _WIN32
                 texture->Release();
+#endif
                 texture = nullptr;
             }
         }
@@ -95,13 +146,16 @@ private:
         desc.Usage = D3D11_USAGE_DEFAULT;
         desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
         
+        ID3D11Texture2D* texture = nullptr;
+        HRESULT hr = 0; // Initialize HRESULT for macOS
+
+#ifdef _WIN32
         D3D11_SUBRESOURCE_DATA subResource = {};
         subResource.pSysMem = data;
         subResource.SysMemPitch = desc.Width * 4;
         subResource.SysMemSlicePitch = 0;
-        
-        ID3D11Texture2D* texture = nullptr;
-        HRESULT hr = device->CreateTexture2D(&desc, &subResource, &texture);
+        hr = device->CreateTexture2D(&desc, &subResource, &texture);
+#endif
         
         if (FAILED(hr)) {
             stbi_image_free(data);
@@ -116,9 +170,13 @@ private:
         srvDesc.Texture2D.MostDetailedMip = 0;
         
         ID3D11ShaderResourceView* textureView = nullptr;
+#ifdef _WIN32
         hr = device->CreateShaderResourceView(texture, &srvDesc, &textureView);
+#endif
         
+        #ifdef _WIN32
         texture->Release();
+        #endif
         stbi_image_free(data);
         
         if (FAILED(hr)) {
