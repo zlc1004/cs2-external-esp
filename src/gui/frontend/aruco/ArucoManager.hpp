@@ -32,9 +32,9 @@ public:
     static ImTextureID GetMarker(int index) {
         auto& instance = GetInstance();
         if (index < 0 || index >= static_cast<int>(instance.textures.size())) {
-            return nullptr;
+            return (ImTextureID)nullptr;
         }
-        return instance.textures[index];
+        return (ImTextureID)instance.textures[index];
     }
     
     static int GetMarkerCount() {

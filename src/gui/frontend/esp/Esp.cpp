@@ -18,9 +18,6 @@ bool Esp::InitImpl() {
 
 	this->font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\consola.ttf", 12.0f, &cfg);
 
-	// Initialize ArUco manager
-	ArucoManager::Init();
-
 	return true;
 }
 
