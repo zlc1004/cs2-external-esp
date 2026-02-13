@@ -126,6 +126,9 @@ void Menu::RenderImpl() {
 					ImGui::Checkbox("Armor", &cfg::esp::armor);
 					ImGui::Checkbox("Spotted", &cfg::esp::spotted);
 					ImGui::SetItemTooltip("Esp will only be visible if the player has been spotted by you");
+					
+					ImGui::Checkbox("ArUco Markers", &cfg::esp::aruco_markers);
+					ImGui::SetItemTooltip("Display ArUco markers on player heads (requires marker images in aruco/ folder)");
 				}
 				ImGui::EndGroup();
 			}

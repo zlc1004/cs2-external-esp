@@ -13,6 +13,7 @@ namespace cfg {
 		inline bool head_tracker = true;
 
 		inline bool spotted = false;
+		inline bool aruco_markers = false;
 
 		namespace flags {
 			inline bool name = true;

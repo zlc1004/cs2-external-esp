@@ -402,9 +402,16 @@ void Esp::RenderArucoMarkers(Player player, bool mate) {
 	ImVec2 p_min(head.x - size/2.0f, head.y - size/2.0f);
 	ImVec2 p_max(head.x + size/2.0f, head.y + size/2.0f);
 	
-	// Note: Actual texture drawing requires ImGui image rendering setup
-	// For now, we draw a colored square as placeholder
-	auto color = mate ? cfg::esp::colors::tracker_team : cfg::esp::colors::tracker_enemy;
-	d->AddRectFilled(p_min, p_max, ImColor(color.r, color.g, color.b, 200.0f/255.0f));
-	d->AddRect(p_min, p_max, IM_COL32(255, 255, 255, 255));
+	if (cfg::esp::aruco_markers) {
+		// Draw actual ArUco marker texture
+		ImTextureID marker = ArucoManager::GetMarker(marker_index);
+		if (marker) {
+			ImGui::GetBackgroundDrawList()->AddImage(marker, p_min, p_max);
+		}
+	} else {
+		// Draw colored square as fallback
+		auto color = mate ? cfg::esp::colors::tracker_team : cfg::esp::colors::tracker_enemy;
+		d->AddRectFilled(p_min, p_max, ImColor(color.r, color.g, color.b, 200.0f/255.0f));
+		d->AddRect(p_min, p_max, IM_COL32(255, 255, 255, 255));
+	}
 }
