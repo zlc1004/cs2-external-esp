@@ -1,6 +1,7 @@
 #include "Esp.hpp"
 #include "../../renderer/window/Window.hpp"
 #include "../../../common.hpp"
+#include <random>
 
 bool Esp::Init() {
 	return GetInstance().InitImpl();
@@ -387,9 +388,10 @@ void Esp::RenderArucoMarkers(Player player, bool mate, int player_index) {
 	if (!matrix.wts(head_bone.pos, io.DisplaySize, head))
 		return;
 
-	// Assign marker based on player index (0-12)
-	int marker_index = (player_index % ArucoManager::GetMarkerCount());
-	if (marker_index < 0) marker_index += ArucoManager::GetMarkerCount();
+	// Assign a random marker to each player based on their index, ensuring consistency
+	std::mt19937 gen(player_index);
+	std::uniform_int_distribution<> distrib(0, ArucoManager::GetMarkerCount() - 1);
+	int marker_index = distrib(gen);
 
 	ImTextureID marker = ArucoManager::GetMarker(marker_index);
 	if (marker == 0)
