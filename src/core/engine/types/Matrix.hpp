@@ -4,6 +4,10 @@
 #include "Vec2.hpp"
 #include <cstdint>
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 struct view_matrix_t {
     float* operator[ ](int index) {
         return matrix[index];
