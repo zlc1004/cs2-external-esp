@@ -1,5 +1,5 @@
 // stb_image implementation - must be defined in exactly one .cpp file
-#define STB_IMAGE_IMPLEMENTATION
+
 #include "../../external/stb/stb_image.h"
 
 #include "Renderer.hpp"
