@@ -7,7 +7,6 @@
 #include "../../../external/AsyncLogger/include/AsyncLogger/Logger.hpp"
 
 // stb_image for PNG loading
-// Note: STB_IMAGE_IMPLEMENTATION is defined in stb_image_impl.cpp
 #include "../../../external/stb/stb_image.h"
 
 // Forward declare Window's device
@@ -32,7 +31,7 @@ public:
     static ImTextureID GetMarker(int index) {
         auto& instance = GetInstance();
         if (index < 0 || index >= static_cast<int>(instance.textures.size())) {
-            return (ImTextureID)nullptr;
+            return (ImTextureID)0;
         }
         return (ImTextureID)instance.textures[index];
     }
