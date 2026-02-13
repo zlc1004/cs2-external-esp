@@ -157,6 +157,6 @@ public:
 private:
 	uint32_t FindProcessIdByProcessName(const char* process_name);
 	uint32_t FindProcessIdByWindowName(const char* window_name);
-	HWND GetWindowHandleFromProcessId(uint32_t ProcessId);
+	HWND GetWindowHandleFromProcessId(DWORD ProcessId);
 };
 #endif
