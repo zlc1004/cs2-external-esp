@@ -399,12 +399,12 @@ void Esp::RenderArucoMarkers(Player player, bool mate) {
 	
 	// Draw the marker at head position
 	float size = 32.0f; // Marker size
-	ImVec2 min(head.x - size/2, head.y - size/2);
-	ImVec2 max(head.x + size/2, head.y + size/2);
+	ImVec2 p_min(head.x - size/2.0f, head.y - size/2.0f);
+	ImVec2 p_max(head.x + size/2.0f, head.y + size/2.0f);
 	
 	// Note: Actual texture drawing requires ImGui image rendering setup
 	// For now, we draw a colored square as placeholder
 	auto color = mate ? cfg::esp::colors::tracker_team : cfg::esp::colors::tracker_enemy;
-	d->AddRectFilled(min, max, ImColor(color.r, color.g, color.b, 200));
-	d->AddRect(min, max, IM_COL32(255, 255, 255, 255));
+	d->AddRectFilled(p_min, p_max, ImColor(color.r, color.g, color.b, 200.0f/255.0f));
+	d->AddRect(p_min, p_max, IM_COL32(255, 255, 255, 255));
 }
