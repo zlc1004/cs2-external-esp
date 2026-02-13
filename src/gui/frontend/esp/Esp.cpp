@@ -39,7 +39,8 @@ void Esp::RenderImpl() {
 	this->matrix = game.view_matrix;
 
 	static int local_team = 0;
-	for (auto& player : players) {
+	for (int i = 0; i < players.size(); ++i) {
+		auto& player = players[i];
 		if (!player.alive)
 			continue;
 
@@ -57,7 +58,7 @@ void Esp::RenderImpl() {
 		if (cfg::esp::spotted && !player.spotted)
 			continue;
 
-		RenderPlayer(player, mate);
+		RenderPlayer(player, mate, i);
 	}
 
 	RenderBomb(bomb);
@@ -66,7 +67,7 @@ void Esp::RenderImpl() {
 	ImGui::PopFont();
 }
 
-void Esp::RenderPlayer(Player player, bool mate) {
+void Esp::RenderPlayer(Player player, bool mate, int player_index) {
 	// Needed for flags & item sizing, so even if the box is not enabled
 	// Should be calculated
 	std::pair<Vec2_t, Vec2_t> bounds;
@@ -376,39 +377,32 @@ void Esp::RenderBomb(Bomb bomb) {
 		bomb_string.data()
 	);
 }
-void Esp::RenderArucoMarkers(Player player, bool mate) {
+void Esp::RenderArucoMarkers(Player player, bool mate, int player_index) {
 	if (player.bone_list.empty())
 		return;
-	
+
 	auto head_bone = player.bone_list[bone_index::head];
-	
+
 	Vec2_t head;
 	if (!matrix.wts(head_bone.pos, io.DisplaySize, head))
 		return;
-	
-	// Cycle through markers 1-13 based on player index
-	static int marker_index = 0;
-	marker_index = (marker_index + 1) % ArucoManager::GetMarkerCount();
-	
+
+	// Assign marker based on player index (0-12)
+	int marker_index = (player_index % ArucoManager::GetMarkerCount());
+	if (marker_index < 0) marker_index += ArucoManager::GetMarkerCount();
+
 	ImTextureID marker = ArucoManager::GetMarker(marker_index);
 	if (marker == 0)
 		return; // Marker not loaded
-	
+
 	// Draw the marker at head position
 	float size = 32.0f; // Marker size
 	ImVec2 p_min(head.x - size/2.0f, head.y - size/2.0f);
 	ImVec2 p_max(head.x + size/2.0f, head.y + size/2.0f);
-	
+
+	// Only draw if the feature is enabled
 	if (cfg::esp::aruco_markers) {
 		// Draw actual ArUco marker texture
-		ImTextureID marker = ArucoManager::GetMarker(marker_index);
-		if (marker) {
-			ImGui::GetBackgroundDrawList()->AddImage(marker, p_min, p_max);
-		}
-	} else {
-		// Draw colored square as fallback
-		auto color = mate ? cfg::esp::colors::tracker_team : cfg::esp::colors::tracker_enemy;
-		d->AddRectFilled(p_min, p_max, ImColor(color.r, color.g, color.b, 200.0f/255.0f));
-		d->AddRect(p_min, p_max, IM_COL32(255, 255, 255, 255));
+		ImGui::GetBackgroundDrawList()->AddImage(marker, p_min, p_max);
 	}
 }
