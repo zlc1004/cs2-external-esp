@@ -1,5 +1,5 @@
 #include "ArucoManager.hpp"
-#include "../../../external/AsyncLogger/Logger.hpp"
+#include "../../../external/AsyncLogger/include/AsyncLogger/Logger.hpp"
 
 bool ArucoManager::Init() {
     return GetInstance().InitImpl();
