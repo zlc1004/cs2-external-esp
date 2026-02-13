@@ -1,6 +1,5 @@
 #include "Esp.hpp"
 #include "../../renderer/window/Window.hpp"
-#include "../../../core/Player.hpp"
 #include "../../../common.hpp"
 
 bool Esp::Init() {

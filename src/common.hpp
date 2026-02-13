@@ -15,7 +15,7 @@
 #include <map>
 #include <memory>
 #include <stack>
-#include "external/nlohmann/json.hpp"
+#include "external/json/include/nlohmann/json.hpp"
 #include <string_view>
 #include <thread>
 #include <vector>

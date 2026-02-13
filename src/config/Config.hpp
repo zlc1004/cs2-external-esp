@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../common.hpp" // For color_t
-#include "../external/nlohmann/json.hpp" // For nlohmann::json
+#include "../external/json/include/nlohmann/json.hpp" // For nlohmann::json
 
 using json = nlohmann::json;
 
