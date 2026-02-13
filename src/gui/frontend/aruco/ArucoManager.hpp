@@ -7,7 +7,7 @@
 #include "../../../external/AsyncLogger/include/AsyncLogger/Logger.hpp"
 
 // stb_image for PNG loading
-#define STB_IMAGE_IMPLEMENTATION
+// Note: STB_IMAGE_IMPLEMENTATION is defined in stb_image_impl.cpp
 #include "../../../external/stb/stb_image.h"
 
 // Forward declare Window's device
