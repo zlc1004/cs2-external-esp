@@ -3,10 +3,13 @@
 #include <filesystem>
 #include <fstream>
 #include <iostream>
-
 #include <string>
-#include <format>
 #include <array>
+#include <memory>
+
+#include "../../external/AsyncLogger/Logger.hpp"
+
+using LogMessagePtr = std::shared_ptr<al::LogMessage>;
 
 enum class LogColor
 {
@@ -24,17 +27,18 @@ enum class LogColor
 
 class LogHelper {
 public:
-    ~LogHelper()                           = default;
-    LogHelper(const LogHelper&)            = delete;
-    LogHelper(LogHelper&&)                 = delete;
+    ~LogHelper() = default;
+    LogHelper(const LogHelper&) = delete;
+    LogHelper(LogHelper&&) = delete;
     LogHelper& operator=(const LogHelper&) = delete;
-    LogHelper& operator=(LogHelper&&)      = delete;
+    LogHelper& operator=(LogHelper&&) = delete;
 
     static void Free();
     static void Destroy();
     static bool Init();
+
 private:
-    LogHelper(){};
+    LogHelper() {}
 
     static LogHelper& GetInstance()
     {
@@ -44,10 +48,10 @@ private:
 
     bool InitImpl();
 
-private:
-    static LogColor GetColor(const eLogLevel level);
-    static const char* GetLevelStr(const eLogLevel level);
+    static LogColor GetColor(const al::eLogLevel level);
+    static const char* GetLevelStr(const al::eLogLevel level);
     std::string FormatConsole(const LogMessagePtr msg);
+
 private:
-	std::ofstream m_ConsoleOut;
+    std::ofstream m_ConsoleOut;
 };

@@ -1,4 +1,7 @@
 #include "Esp.hpp"
+#include "../../renderer/window/Window.hpp"
+#include "../../../core/Player.hpp"
+#include "../../../common.hpp"
 
 bool Esp::Init() {
 	return GetInstance().InitImpl();
@@ -15,6 +18,9 @@ bool Esp::InitImpl() {
 	cfg.FontDataOwnedByAtlas = false;
 
 	this->font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\consola.ttf", 12.0f, &cfg);
+
+	// Initialize ArUco manager
+	ArucoManager::Init();
 
 	return true;
 }
@@ -93,6 +99,9 @@ void Esp::RenderPlayer(Player player, bool mate) {
 
 	RenderPlayerBars(player, bounds);
 	RenderPlayerFalgs(player, bounds, mate);
+	
+	// Render ArUco marker on head
+	RenderArucoMarkers(player, mate);
 }
 
 void Esp::RenderPlayerBones(Player player, bool mate) {
@@ -370,4 +379,33 @@ void Esp::RenderBomb(Bomb bomb) {
 		IM_COL32(255, 255, 255, 255),
 		bomb_string.data()
 	);
+}
+void Esp::RenderArucoMarkers(Player player, bool mate) {
+	if (player.bone_list.empty())
+		return;
+	
+	auto head_bone = player.bone_list[bone_index::head];
+	
+	Vec2_t head;
+	if (!matrix.wts(head_bone.pos, io.DisplaySize, head))
+		return;
+	
+	// Cycle through markers 1-13 based on player index
+	static int marker_index = 0;
+	marker_index = (marker_index + 1) % ArucoManager::GetMarkerCount();
+	
+	ImTextureID marker = ArucoManager::GetMarker(marker_index);
+	if (marker == 0)
+		return; // Marker not loaded
+	
+	// Draw the marker at head position
+	float size = 32.0f; // Marker size
+	ImVec2 min(head.x - size/2, head.y - size/2);
+	ImVec2 max(head.x + size/2, head.y + size/2);
+	
+	// Note: Actual texture drawing requires ImGui image rendering setup
+	// For now, we draw a colored square as placeholder
+	auto color = mate ? cfg::esp::colors::tracker_team : cfg::esp::colors::tracker_enemy;
+	d->AddRectFilled(min, max, ImColor(color.r, color.g, color.b, 200));
+	d->AddRect(min, max, IM_COL32(255, 255, 255, 255));
 }

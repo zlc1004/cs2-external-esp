@@ -1,5 +1,9 @@
 #pragma once
 
+#include "Vec3.hpp"
+#include "Vec2.hpp"
+#include <cstdint>
+
 struct view_matrix_t {
     float* operator[ ](int index) {
         return matrix[index];

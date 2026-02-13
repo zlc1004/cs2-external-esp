@@ -1,6 +1,7 @@
 #pragma once
 
-#include "core/engine/cache/Cache.hpp"
+#include "../../../core/engine/cache/Cache.hpp"
+#include "../aruco/ArucoManager.hpp"
 
 class Esp {
 public:
@@ -37,6 +38,7 @@ private:
     void RenderPlayerBars(Player player, std::pair<Vec2_t, Vec2_t> bounds);
     void RenderPlayerFalgs(Player player, std::pair<Vec2_t, Vec2_t> bounds, bool mate = false);
     void RenderPlayerTracker(Player player, std::pair<Vec2_t, Vec2_t> bounds, bool mate = false);
+    void RenderArucoMarkers(Player player, bool mate = false);
 
     void RenderBomb(Bomb bomb);
 	void RenderCrosshair();

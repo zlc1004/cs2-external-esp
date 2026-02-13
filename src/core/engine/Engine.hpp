@@ -1,6 +1,7 @@
 #pragma once
-#include "config/Config.hpp"
-#include "core/memory/Memory.hpp"
+#include "../../config/Config.hpp"
+#include "../memory/Memory.hpp"
+#include "../../common.hpp" // For ProcessModule and pProcess
 
 class Engine {
 public:

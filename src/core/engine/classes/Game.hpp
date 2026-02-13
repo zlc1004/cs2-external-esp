@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../types/Matrix.hpp"
+
 class Game {
 public:
     Game() {};

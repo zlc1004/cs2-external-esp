@@ -1,8 +1,7 @@
 #pragma once
 #define IMGUI_DEFINE_MATH_OPERATORS
 
-#include <Logger.hpp>
-#include <Windows.h>
+#include "external/AsyncLogger/Logger.hpp"
 #include <array>
 #include <atomic>
 #include <chrono>
@@ -16,10 +15,15 @@
 #include <map>
 #include <memory>
 #include <stack>
-#include <nlohmann/json.hpp>
+#include "external/nlohmann/json.hpp"
 #include <string_view>
 #include <thread>
 #include <vector>
+
+// Dummy color_t for compilation on macOS. Will be properly defined by GUI library on Windows.
+struct color_t {
+    float r, g, b, a;
+};
 
 using namespace al;
 

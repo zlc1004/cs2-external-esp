@@ -3,10 +3,13 @@
 
 #include <vector>
 #include <math.h>
-#include <Windows.h>
-#include <TlHelp32.h>
 #include <string>
 #include <iostream>
+#include <cstdint> // For uintptr_t and other standard integer types
+
+#ifdef _WIN32
+#include <Windows.h>
+#include <TlHelp32.h>
 #include <Psapi.h> 
 
 typedef NTSTATUS(WINAPI* pNtReadVirtualMemory)(HANDLE ProcessHandle, PVOID BaseAddress, PVOID Buffer, ULONG NumberOfBytesToRead, PULONG NumberOfBytesRead);
@@ -23,6 +26,31 @@ public:
 	pNtReadVirtualMemory pfnNtReadVirtualMemory;
 	pNtWriteVirtualMemory pfnNtWriteVirtualMemory;
 };
+#else
+// Dummy definitions for non-Windows compilation
+// These will allow the code to compile on macOS but will not provide actual functionality
+#include <cstring> // For memset
+
+using HANDLE = void*;
+using HWND = void*;
+using DWORD = unsigned long;
+using ULONG = unsigned long;
+using PULONG = unsigned long*;
+using PVOID = void*;
+using LPVOID = void*; // Add LPVOID
+using SIZE_T = size_t; // Add SIZE_T
+using NTSTATUS = int;
+
+// Dummy pMemory class
+class pMemory {
+public:
+    pMemory() {}
+    // Dummy functions for compilation
+    NTSTATUS pfnNtReadVirtualMemory(HANDLE ProcessHandle, PVOID BaseAddress, PVOID Buffer, ULONG NumberOfBytesToRead, PULONG NumberOfBytesRead) { return 0; }
+    NTSTATUS pfnNtWriteVirtualMemory(HANDLE ProcessHandle, PVOID BaseAddress, PVOID Buffer, ULONG NumberOfBytesToWrite, PULONG NumberOfBytesWritten) { return 0; }
+};
+
+#endif
 
 struct ProcessModule
 {
@@ -32,7 +60,7 @@ struct ProcessModule
 class pProcess
 {
 public:
-	DWORD		  pid_; // process id
+	uint32_t	  pid_; // process id
 	HANDLE		  handle_; // handle to process
 	HWND		  hwnd_; // window handle
 	ProcessModule base_client_;
@@ -66,8 +94,15 @@ public:
 		SIZE_T bytesRead;
 		pMemory cMemory;
 
+#ifdef _WIN32
 		NTSTATUS status = cMemory.pfnNtReadVirtualMemory(this->handle_, (PVOID)(address), buffer, static_cast<ULONG>(size), (PULONG)&bytesRead);
-	
+#else
+        // Dummy read for non-Windows compilation
+        bytesRead = size;
+        // Potentially fill buffer with dummy data or zeros
+        memset(buffer, 0, size);
+        NTSTATUS status = 0; // STATUS_SUCCESS
+#endif
 		return status == 0x00000000/*STATUS_SUCCESS*/ || bytesRead == size;
 	}
 
@@ -75,7 +110,9 @@ public:
 	void write(uintptr_t address, T value)
 	{
 		pMemory cMemory;
+#ifdef _WIN32
 		cMemory.pfnNtWriteVirtualMemory(handle_, (void*)address, &value, sizeof(T), 0);
+#endif
 	}
 
 	template<class T>
@@ -84,14 +121,18 @@ public:
 		T buffer{};
 		pMemory cMemory;
 
+#ifdef _WIN32
 		cMemory.pfnNtReadVirtualMemory(handle_, (void*)address, &buffer, sizeof(T), 0);
+#endif
 		return buffer;
 	}
 
 	void write_bytes(uintptr_t addr, std::vector<uint8_t> patch)
 	{
 		pMemory cMemory;
+#ifdef _WIN32
 		cMemory.pfnNtWriteVirtualMemory(handle_, (void*)addr, &patch[0], patch.size(), 0);
+#endif
 	}
 
 	uintptr_t read_multi_address(uintptr_t ptr, std::vector<uintptr_t> offsets)
@@ -116,6 +157,6 @@ public:
 private:
 	uint32_t FindProcessIdByProcessName(const char* process_name);
 	uint32_t FindProcessIdByWindowName(const char* window_name);
-	HWND GetWindowHandleFromProcessId(DWORD ProcessId);
+	HWND GetWindowHandleFromProcessId(uint32_t ProcessId);
 };
 #endif

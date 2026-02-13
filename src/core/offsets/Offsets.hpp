@@ -1,18 +1,23 @@
+#pragma once
+
+#include <cstdint> // For std::ptrdiff_t and uintptr_t
+#include <string>
+
 namespace offsets
 {
 	// client.dll
-	inline DWORD entityList;
-	inline DWORD viewMatrix;
-	inline DWORD localPlayerController;
-	inline DWORD globalVars;
-	inline DWORD plantedC4;
+	inline uintptr_t entityList;
+	inline uintptr_t viewMatrix;
+	inline uintptr_t localPlayerController;
+	inline uintptr_t globalVars;
+	inline uintptr_t plantedC4;
 
 	//inline DWORD viewAngles;
 	//inline DWORD localPlayerPawn;
 	//inline DWORD csgoInput;
 
 	// engine2.dll
-	inline DWORD buildNumber;
+	inline uintptr_t buildNumber;
 
 	namespace controller {
 		constexpr std::ptrdiff_t m_iPing = 0x828; // uint32

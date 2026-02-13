@@ -1,8 +1,8 @@
 #pragma once
-#include "core/engine/classes/Game.hpp"
-#include "core/engine/classes/Bomb.hpp"
-#include "core/engine/classes/Player.hpp"
-#include "core/engine/classes/Globals.hpp"
+#include "../classes/Game.hpp"
+#include "../classes/Bomb.hpp"
+#include "../classes/Player.hpp"
+#include "../classes/Globals.hpp"
 
 //constexpr int MAX_ENTITIES = 1024;
 //constexpr int MAX_PLAYERS = 64; // Mo need we get this from Globals
