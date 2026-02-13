@@ -20,10 +20,8 @@
 #include <thread>
 #include <vector>
 
-// Dummy color_t for compilation on macOS. Will be properly defined by GUI library on Windows.
-struct color_t {
-    float r, g, b, a;
-};
+// Include color_t from types (this defines color_t properly for Windows)
+#include "core/engine/types/Color.hpp"
 
 using namespace al;
 

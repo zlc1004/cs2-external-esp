@@ -1,5 +1,7 @@
 #pragma once
 
+#include "../../../external/imgui/imgui.h"
+
 struct color_t {
     float r, g, b, a;
 
@@ -12,6 +14,6 @@ struct color_t {
     operator ImColor() const { return ImColor(r, g, b, a); }
     operator ImVec4() const { return ImVec4(r, g, b, a); }
 
-    float* data() { return &r; }               // <--- added
-    const float* data() const { return &r; }   // <--- added
+    float* data() { return &r; }
+    const float* data() const { return &r; }
 };
