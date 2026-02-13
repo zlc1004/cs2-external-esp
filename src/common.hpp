@@ -1,7 +1,7 @@
 #pragma once
 #define IMGUI_DEFINE_MATH_OPERATORS
 
-#include "external/AsyncLogger/Logger.hpp"
+#include "external/AsyncLogger/include/AsyncLogger/Logger.hpp"
 #include <array>
 #include <atomic>
 #include <chrono>

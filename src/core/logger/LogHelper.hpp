@@ -7,7 +7,7 @@
 #include <array>
 #include <memory>
 
-#include "../../external/AsyncLogger/Logger.hpp"
+#include "../../external/AsyncLogger/include/AsyncLogger/Logger.hpp"
 
 using LogMessagePtr = std::shared_ptr<al::LogMessage>;
 
