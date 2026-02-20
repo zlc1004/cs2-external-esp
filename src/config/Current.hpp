@@ -35,7 +35,15 @@ namespace cfg {
 			inline color_t tracker_team{ 1.f, 1.f, 1.f, 0.3f };
 			inline color_t tracker_enemy{ 1.f, 1.f, 1.f, 0.3f };
 		}
+	}
 
+	namespace aimbot {
+		inline bool enabled = false;
+		inline bool rcs = false;
+		inline bool vis_check = false;
+		inline float fov = 5.0f;
+		inline float smooth = 1.0f;
+		inline int bone = 6; // head
 	}
 
 	namespace settings {

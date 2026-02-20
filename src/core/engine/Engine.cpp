@@ -2,6 +2,7 @@
 
 #include "core/offsets/Dumper.hpp"
 #include "core/engine/cache/Cache.hpp"
+#include "core/engine/features/Aimbot.hpp"
 
 bool Engine::Init() {
     return GetInstance().InitImpl();
@@ -51,11 +52,14 @@ bool Engine::InitImpl() {
 }
 
 void Engine::Thread() {
+    using namespace std::chrono_literals;
     //uintptr_t number = process->read<uintptr_t>(base_engine.base + offsets::buildNumber);
     //LOGF(VERBOSE, "Build number is {}", number);
 
     while (true) {
         Cache::Refresh();
+        Aimbot::Run();
+        std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
 

@@ -12,10 +12,6 @@ namespace offsets
 	inline uintptr_t globalVars;
 	inline uintptr_t plantedC4;
 
-	//inline DWORD viewAngles;
-	//inline DWORD localPlayerPawn;
-	//inline DWORD csgoInput;
-
 	// engine2.dll
 	inline uintptr_t buildNumber;
 
@@ -47,6 +43,8 @@ namespace offsets
 		constexpr std::ptrdiff_t m_entitySpottedState = 0x26E0; // EntitySpottedState_t
 		constexpr std::ptrdiff_t m_bSpottedByMask = 0xC; // uint32[2] - EntitySpottedState_t
 		constexpr std::ptrdiff_t m_flFlashOverlayAlpha = 0x15EC; // float32 - C_CSPlayerPawnBase 
+		constexpr std::ptrdiff_t m_aimPunchAngle = 0x1508; // QAngle
+		constexpr std::ptrdiff_t m_iShotsFired = 0x22B4; // int32
 
 
 #if 0
@@ -109,13 +107,6 @@ namespace offsets
 			"FF C0 "
 			"89 05 ?? ?? ?? ?? "
 			"48 8B C6 48 89 34 EA 80 BE";
-
-	#if 0
-		const std::string localPlayerPawn = "48 8D 05 ?? ?? ?? ?? C3 CC CC CC CC CC CC CC CC 48 83 EC ?? 8B 0D";
-
-		const std::string csgoInput = "48 89 05 ?? ?? ?? ?? 0F 57 C0 0F 11 05";
-		const std::string viewAngles = "F2 42 0F 10 84 28 ?? ?? ?? ??"; //"48 8B 0D ?? ?? ?? ?? 48 8B 01 48 FF 60 30";
-	#endif
 
 		const std::string buildNumber = "89 05 ?? ?? ?? ?? 48 8d 0d ?? ?? ?? ?? ff 15 ?? ?? ?? ?? 48 8b 0d"; //"89 05 ?? ?? ?? ?? 48 8D 0D ?? ?? ?? ?? FF 15 ?? ?? ?? ?? 48 8B 0D";
 		

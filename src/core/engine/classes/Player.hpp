@@ -9,12 +9,14 @@ public:
     bool GetBounds(view_matrix_t matrix, Vec2_t size, std::pair<Vec2_t, Vec2_t>& bounds);
 public:
     Vec3_t pos;
+    Vec3_t aim_punch;
 
     int ping = 0;
     int team = 0;
     int health = 0;
     int armor = 0;
     int money = 0;
+    int shots_fired = 0;
 
     bool bot = true;
     bool alive = false;

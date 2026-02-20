@@ -131,6 +131,28 @@ void Menu::RenderImpl() {
 					ImGui::SetItemTooltip("Display ArUco markers on player heads (requires marker images in aruco/ folder)");
 				}
 				ImGui::EndGroup();
+
+				ImGui::Text("Aimbot");
+				ImGui::Separator();
+				ImGui::Checkbox("Aimbot Enabled", &cfg::aimbot::enabled);
+				ImGui::BeginDisabled(!cfg::aimbot::enabled);
+				{
+					ImGui::Checkbox("RCS", &cfg::aimbot::rcs);
+					ImGui::Checkbox("Visibility Check", &cfg::aimbot::vis_check);
+					ImGui::SliderFloat("FOV", &cfg::aimbot::fov, 0.1f, 30.0f, "%.1f");
+					
+					const char* bones[] = { "Head", "Neck", "Spine", "Pelvis" };
+					static int selected_bone = 0;
+					if (ImGui::Combo("Target Bone", &selected_bone, bones, IM_ARRAYSIZE(bones))) {
+						switch (selected_bone) {
+						case 0: cfg::aimbot::bone = 6; break; // head
+						case 1: cfg::aimbot::bone = 5; break; // neck
+						case 2: cfg::aimbot::bone = 4; break; // spine
+						case 3: cfg::aimbot::bone = 0; break; // pelvis
+						}
+					}
+				}
+				ImGui::EndDisabled();
 			}
 			ImGui::EndChild();
 

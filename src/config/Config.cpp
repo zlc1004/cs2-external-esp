@@ -68,6 +68,14 @@ bool Config::ReadImpl() {
 		cfg::settings::streamproof = data["utils"].value("streamproof", false);
 		cfg::settings::vsync = data["utils"].value("vsync", true);
 		//cfg::settings::open_menu_key = data["utils"].value("open_menu_key", 0);
+
+		// aimbot
+		cfg::aimbot::enabled = data["aimbot"].value("enabled", false);
+		cfg::aimbot::rcs = data["aimbot"].value("rcs", false);
+		cfg::aimbot::vis_check = data["aimbot"].value("vis_check", false);
+		cfg::aimbot::fov = data["aimbot"].value("fov", 5.0f);
+		cfg::aimbot::smooth = data["aimbot"].value("smooth", 1.0f);
+		cfg::aimbot::bone = data["aimbot"].value("bone", 6);
 	} catch (const std::exception& e) {
 		LOGF(FATAL, "Failed to parse configuration");
 		WriteImpl();
@@ -119,6 +127,14 @@ bool Config::WriteImpl() {
 	data["utils"]["streamproof"] = cfg::settings::streamproof;
 	data["utils"]["vsync"] = cfg::settings::vsync;
 	//data["utils"]["open_menu_key"] = cfg::settings::open_menu_key;
+
+	// aimbot
+	data["aimbot"]["enabled"] = cfg::aimbot::enabled;
+	data["aimbot"]["rcs"] = cfg::aimbot::rcs;
+	data["aimbot"]["vis_check"] = cfg::aimbot::vis_check;
+	data["aimbot"]["fov"] = cfg::aimbot::fov;
+	data["aimbot"]["smooth"] = cfg::aimbot::smooth;
+	data["aimbot"]["bone"] = cfg::aimbot::bone;
 
 	f << std::setw(4) << data << std::endl;
 	f.close();
