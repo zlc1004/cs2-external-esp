@@ -41,9 +41,15 @@ namespace cfg {
 		inline bool enabled = false;
 		inline bool rcs = false;
 		inline bool vis_check = false;
+		inline bool ignore_team = true;
 		inline float fov = 5.0f;
 		inline float smooth = 1.0f;
 		inline int bone = 6; // head
+		
+		// Anti-recoil settings
+		inline bool anti_recoil = false;       // Enable pattern-based anti-recoil
+		inline bool auto_rebound = true;       // Automatically return to initial position after spray
+		inline float pattern_scale = 1.0f;    // Scale factor for recoil pattern (adjust for sensitivity)
 	}
 
 	namespace settings {

@@ -73,9 +73,13 @@ bool Config::ReadImpl() {
 		cfg::aimbot::enabled = data["aimbot"].value("enabled", false);
 		cfg::aimbot::rcs = data["aimbot"].value("rcs", false);
 		cfg::aimbot::vis_check = data["aimbot"].value("vis_check", false);
+		cfg::aimbot::ignore_team = data["aimbot"].value("ignore_team", true);
 		cfg::aimbot::fov = data["aimbot"].value("fov", 5.0f);
 		cfg::aimbot::smooth = data["aimbot"].value("smooth", 1.0f);
 		cfg::aimbot::bone = data["aimbot"].value("bone", 6);
+		cfg::aimbot::anti_recoil = data["aimbot"].value("anti_recoil", false);
+		cfg::aimbot::auto_rebound = data["aimbot"].value("auto_rebound", true);
+		cfg::aimbot::pattern_scale = data["aimbot"].value("pattern_scale", 1.0f);
 	} catch (const std::exception& e) {
 		LOGF(FATAL, "Failed to parse configuration");
 		WriteImpl();
@@ -132,9 +136,13 @@ bool Config::WriteImpl() {
 	data["aimbot"]["enabled"] = cfg::aimbot::enabled;
 	data["aimbot"]["rcs"] = cfg::aimbot::rcs;
 	data["aimbot"]["vis_check"] = cfg::aimbot::vis_check;
+	data["aimbot"]["ignore_team"] = cfg::aimbot::ignore_team;
 	data["aimbot"]["fov"] = cfg::aimbot::fov;
 	data["aimbot"]["smooth"] = cfg::aimbot::smooth;
 	data["aimbot"]["bone"] = cfg::aimbot::bone;
+	data["aimbot"]["anti_recoil"] = cfg::aimbot::anti_recoil;
+	data["aimbot"]["auto_rebound"] = cfg::aimbot::auto_rebound;
+	data["aimbot"]["pattern_scale"] = cfg::aimbot::pattern_scale;
 
 	f << std::setw(4) << data << std::endl;
 	f.close();

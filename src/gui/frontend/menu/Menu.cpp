@@ -132,13 +132,61 @@ void Menu::RenderImpl() {
 				}
 				ImGui::EndGroup();
 
+				ImGui::Text("Aimbot & Recoil Control");
+				ImGui::Separator();
+				
+				// Show current weapon info for debugging
+				auto cache = Cache::CopySnapshot();
+				for (auto& player : cache.players) {
+					if (player.localplayer && player.alive) {
+						ImGui::TextColored(ImVec4(0.5f, 1.0f, 0.5f, 1.0f), "Current Weapon: %s", player.clean_weapon.c_str());
+						ImGui::TextColored(ImVec4(0.7f, 0.7f, 1.0f, 1.0f), "Shots Fired: %d", player.shots_fired);
+						break;
+					}
+				}
+				
+				// Anti-Recoil section (works independently)
+				ImGui::Text("Pattern-Based Anti-Recoil");
+				ImGui::Separator();
+				ImGui::Checkbox("Anti-Recoil##standalone", &cfg::aimbot::anti_recoil);
+				ImGui::SetItemTooltip("Pattern-based recoil compensation - triggers on LEFT MOUSE BUTTON\nWorks independently, doesn't require aimbot enabled!");
+				
+				// Show anti-recoil options if enabled
+				if (cfg::aimbot::anti_recoil) {
+					ImGui::Indent();
+					ImGui::Checkbox("Auto Rebound##antirecoil", &cfg::aimbot::auto_rebound);
+					ImGui::SetItemTooltip("Automatically return to initial position after spray ends");
+					
+					ImGui::SliderFloat("Pattern Scale##antirecoil", &cfg::aimbot::pattern_scale, 0.5f, 2.0f, "%.2f");
+					ImGui::SetItemTooltip("Adjust pattern intensity for your sensitivity\nDefault 1.0x = sens 2.40-2.60");
+					
+					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Supported: AK47, M4A4, M4A1-S, FAMAS,");
+					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "GALIL, AUG, P90");
+					
+					// Show active status
+					if (GetAsyncKeyState(VK_LBUTTON) & 0x8000) {
+						ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), "STATUS: ACTIVE (Shooting)");
+					} else {
+						ImGui::TextColored(ImVec4(0.7f, 0.7f, 0.7f, 1.0f), "STATUS: Standby (Hold LMB to activate)");
+					}
+					
+					ImGui::Unindent();
+				}
+				
+				ImGui::Spacing();
+				ImGui::Spacing();
+				
+				// Aimbot section
 				ImGui::Text("Aimbot");
 				ImGui::Separator();
 				ImGui::Checkbox("Aimbot Enabled", &cfg::aimbot::enabled);
 				ImGui::BeginDisabled(!cfg::aimbot::enabled);
 				{
 					ImGui::Checkbox("RCS", &cfg::aimbot::rcs);
+					ImGui::SetItemTooltip("Standard Recoil Control System (aim punch based)");
+					
 					ImGui::Checkbox("Visibility Check", &cfg::aimbot::vis_check);
+					ImGui::Checkbox("Ignore Team", &cfg::aimbot::ignore_team);
 					ImGui::SliderFloat("FOV", &cfg::aimbot::fov, 0.1f, 30.0f, "%.1f");
 					
 					const char* bones[] = { "Head", "Neck", "Spine", "Pelvis" };
