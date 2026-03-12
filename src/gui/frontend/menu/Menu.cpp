@@ -185,9 +185,17 @@ void Menu::RenderImpl() {
 					ImGui::Checkbox("RCS", &cfg::aimbot::rcs);
 					ImGui::SetItemTooltip("Standard Recoil Control System (aim punch based)");
 					
+					if (cfg::aimbot::rcs) {
+						ImGui::SliderFloat("RCS Scale", &cfg::aimbot::rcs_scale, 0.0f, 2.0f, "%.2f");
+						ImGui::SetItemTooltip("Recoil compensation strength (1.0 = full compensation)");
+					}
+					
 					ImGui::Checkbox("Visibility Check", &cfg::aimbot::vis_check);
 					ImGui::Checkbox("Ignore Team", &cfg::aimbot::ignore_team);
-					ImGui::SliderFloat("FOV", &cfg::aimbot::fov, 0.1f, 30.0f, "%.1f");
+					ImGui::SliderFloat("FOV", &cfg::aimbot::fov, 0.1f, 100.0f, "%.1f");
+					ImGui::SetItemTooltip("Field of view for aimbot activation (degrees)");
+					ImGui::Checkbox("Draw FOV Circle", &cfg::aimbot::draw_fov);
+					ImGui::SetItemTooltip("Show FOV circle on screen");
 					
 					const char* bones[] = { "Head", "Neck", "Spine", "Pelvis" };
 					static int selected_bone = 0;
@@ -201,6 +209,33 @@ void Menu::RenderImpl() {
 					}
 				}
 				ImGui::EndDisabled();
+			}
+			
+			// TriggerBot Section
+			if (ImGui::CollapsingHeader("TriggerBot", ImGuiTreeNodeFlags_DefaultOpen)) {
+				ImGui::Checkbox("TriggerBot Enabled", &cfg::triggerbot::enabled);
+				ImGui::BeginDisabled(!cfg::triggerbot::enabled);
+				{
+					ImGui::Checkbox("Ignore Team##triggerbot", &cfg::triggerbot::ignore_team);
+					ImGui::SliderInt("Delay##triggerbot", &cfg::triggerbot::delay, 10, 300, "%d ms");
+					ImGui::TextWrapped("Hotkey: ALT (hold to activate)");
+				}
+				ImGui::EndDisabled();
+				ImGui::Spacing();
+			}
+			
+			// Bhop Section
+			if (ImGui::CollapsingHeader("Bhop", ImGuiTreeNodeFlags_DefaultOpen)) {
+				ImGui::Checkbox("Bhop Enabled", &cfg::bhop::enabled);
+				ImGui::TextWrapped("Automatic bunnyhopping - hold SPACE to jump repeatedly.");
+				ImGui::Spacing();
+			}
+			
+			// Anti-Flash Section  
+			if (ImGui::CollapsingHeader("Anti-Flash", ImGuiTreeNodeFlags_DefaultOpen)) {
+				ImGui::Checkbox("Anti-Flash Enabled", &cfg::antiflash::enabled);
+				ImGui::TextWrapped("Automatically removes flashbang effects.");
+				ImGui::Spacing();
 			}
 			ImGui::EndChild();
 

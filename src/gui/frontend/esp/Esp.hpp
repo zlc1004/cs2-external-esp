@@ -42,4 +42,5 @@ private:
 
     void RenderBomb(Bomb bomb);
 	void RenderCrosshair();
+	void RenderAimbotFov();
 };

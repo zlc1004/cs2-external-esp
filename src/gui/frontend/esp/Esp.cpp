@@ -64,6 +64,7 @@ void Esp::RenderImpl() {
 
 	RenderBomb(bomb);
 	RenderCrosshair();
+	RenderAimbotFov();
 
 	ImGui::PopFont();
 }
@@ -322,6 +323,32 @@ void Esp::RenderCrosshair()
 		ImVec2(center.x, center.y + size + 1),
 		IM_COL32(255, 255, 255, 255),
 		thickness);
+}
+
+void Esp::RenderAimbotFov()
+{
+	if (!cfg::aimbot::draw_fov)
+		return;
+
+	if (!cfg::aimbot::enabled)
+		return;
+
+	ImVec2 center(
+		floorf(io.DisplaySize.x * 0.5f),
+		floorf(io.DisplaySize.y * 0.5f));
+
+	// Convert FOV angle to screen radius
+	// Using a simple approximation: radius = FOV * screen_height / 90
+	// This gives reasonable results for typical FOV values
+	float radius = cfg::aimbot::fov * io.DisplaySize.y / 90.0f;
+
+	// Draw circle with semi-transparent color
+	d->AddCircle(
+		center,
+		radius,
+		IM_COL32(255, 255, 255, 100),  // White with transparency
+		64,  // Number of segments (higher = smoother)
+		1.5f); // Thickness
 }
 
 void Esp::RenderBomb(Bomb bomb) {
