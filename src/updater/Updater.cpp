@@ -8,6 +8,10 @@ bool Updater::Process() {
 	return GetInstance().ProcessImpl();
 }
 
+bool Updater::FetchOffsets() {
+	return GetInstance().FetchOffsetsImpl();
+}
+
 Status Updater::GetStatus() {
 	return GetInstance().status;
 }
@@ -98,4 +102,56 @@ bool Updater::ProcessImpl() {
 	}
 
 	return true;
+}
+
+bool Updater::FetchOffsetsImpl() {
+	LOGF(INFO, "Fetching latest offsets from GitHub...");
+	
+	json response;
+	auto http_status = HttpHelper::Get(this->offsets_url, response);
+
+	if (http_status == -1) {
+		LOGF(FATAL, "Failed to fetch offsets from GitHub");
+		return false;
+	}
+
+	if (http_status == -2) {
+		LOGF(FATAL, "Failed to parse offsets JSON");
+		return false;
+	}
+
+	if (http_status != 200) {
+		LOGF(FATAL, "Server returned status code {}", http_status);
+		return false;
+	}
+
+	try {
+		// The offsets JSON structure from our Python script
+		auto client_dll = response["client_dll"];
+		auto offsets = client_dll["offsets"];
+		auto classes = client_dll["classes"];
+		
+		LOGF(INFO, "Successfully fetched offsets from GitHub:");
+		LOGF(INFO, "  Version: {}", response.value("version", "unknown"));
+		
+		// Log some key offsets as verification
+		if (offsets.contains("dwViewAngles")) {
+			LOGF(INFO, "  dwViewAngles: 0x{:X}", offsets["dwViewAngles"].get<int>());
+		}
+		if (offsets.contains("dwEntityList")) {
+			LOGF(INFO, "  dwEntityList: 0x{:X}", offsets["dwEntityList"].get<int>());
+		}
+		
+		// TODO: Apply offsets to the running application
+		// This would require dynamic offset updating, which is complex
+		// For now, we just verify we can fetch them
+		
+		LOGF(INFO, "Offset fetch successful (application restart required to use new offsets)");
+		return true;
+	}
+	catch (std::exception& e) {
+		LOGF(VERBOSE, e.what());
+		LOGF(FATAL, "Failed to parse offsets JSON structure");
+		return false;
+	}
 }

@@ -4,7 +4,7 @@
 ## Get latest from https://github.com/github/gitignore/blob/main/VisualStudio.gitignore
 
 # Ignore all the offsets.json files but the one in the folder offsets for the auto updater
-offsets.json
+
 config.json
 !offsets/offsets.json 
 .vscode
@@ -405,3 +405,6 @@ FodyWeavers.xsd
 *.sln.iml
 
 .conda
+
+tmp
+output

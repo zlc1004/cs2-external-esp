@@ -14,12 +14,15 @@ int main()
 
     LOGF(INFO, "Compiled {}, Welcome to cs2-external-esp-recode!", __TIMESTAMP__);
 
+    // Updater check disabled for local development
+    /*
     if (!Updater::Init() || !Updater::Process()) {
         LOGF(FATAL, "Updater failed to run, the application has not verified its status, execution its not recommended");
         LOGF(INFO, "Click any key to continue... [NOT RECOMMENDED]");
         std::cin.get();
         //goto exit;
     }
+    */
 
     if (!Engine::Init()) {
         LOGF(FATAL, "Engine failed to initialize, cannot continue execution");
