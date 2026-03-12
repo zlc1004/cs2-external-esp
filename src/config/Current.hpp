@@ -45,11 +45,30 @@ namespace cfg {
 		inline float fov = 5.0f;
 		inline float smooth = 1.0f;
 		inline int bone = 6; // head
+		inline float rcs_scale = 1.0f; // RCS scale factor (0.0 - 2.0)
+		inline bool draw_fov = false; // Draw FOV circle on screen
 		
 		// Anti-recoil settings
 		inline bool anti_recoil = false;       // Enable pattern-based anti-recoil
 		inline bool auto_rebound = true;       // Automatically return to initial position after spray
 		inline float pattern_scale = 1.0f;    // Scale factor for recoil pattern (adjust for sensitivity)
+	}
+
+	// TriggerBot settings
+	namespace triggerbot {
+		inline bool enabled = false;
+		inline bool ignore_team = true;
+		inline int delay = 90; // milliseconds
+	}
+
+	// Bhop settings
+	namespace bhop {
+		inline bool enabled = false;
+	}
+
+	// Anti-Flash settings  
+	namespace antiflash {
+		inline bool enabled = false;
 	}
 
 	namespace settings {

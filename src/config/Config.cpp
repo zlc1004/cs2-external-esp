@@ -72,14 +72,27 @@ bool Config::ReadImpl() {
 		// aimbot
 		cfg::aimbot::enabled = data["aimbot"].value("enabled", false);
 		cfg::aimbot::rcs = data["aimbot"].value("rcs", false);
+		cfg::aimbot::rcs_scale = data["aimbot"].value("rcs_scale", 1.0f);
 		cfg::aimbot::vis_check = data["aimbot"].value("vis_check", false);
 		cfg::aimbot::ignore_team = data["aimbot"].value("ignore_team", true);
 		cfg::aimbot::fov = data["aimbot"].value("fov", 5.0f);
 		cfg::aimbot::smooth = data["aimbot"].value("smooth", 1.0f);
 		cfg::aimbot::bone = data["aimbot"].value("bone", 6);
+		cfg::aimbot::draw_fov = data["aimbot"].value("draw_fov", false);
 		cfg::aimbot::anti_recoil = data["aimbot"].value("anti_recoil", false);
 		cfg::aimbot::auto_rebound = data["aimbot"].value("auto_rebound", true);
 		cfg::aimbot::pattern_scale = data["aimbot"].value("pattern_scale", 1.0f);
+
+		// triggerbot
+		cfg::triggerbot::enabled = data["triggerbot"].value("enabled", false);
+		cfg::triggerbot::ignore_team = data["triggerbot"].value("ignore_team", true);
+		cfg::triggerbot::delay = data["triggerbot"].value("delay", 90);
+
+		// bhop
+		cfg::bhop::enabled = data["bhop"].value("enabled", false);
+
+		// antiflash
+		cfg::antiflash::enabled = data["antiflash"].value("enabled", false);
 	} catch (const std::exception& e) {
 		LOGF(FATAL, "Failed to parse configuration");
 		WriteImpl();
@@ -135,14 +148,27 @@ bool Config::WriteImpl() {
 	// aimbot
 	data["aimbot"]["enabled"] = cfg::aimbot::enabled;
 	data["aimbot"]["rcs"] = cfg::aimbot::rcs;
+	data["aimbot"]["rcs_scale"] = cfg::aimbot::rcs_scale;
 	data["aimbot"]["vis_check"] = cfg::aimbot::vis_check;
 	data["aimbot"]["ignore_team"] = cfg::aimbot::ignore_team;
 	data["aimbot"]["fov"] = cfg::aimbot::fov;
 	data["aimbot"]["smooth"] = cfg::aimbot::smooth;
 	data["aimbot"]["bone"] = cfg::aimbot::bone;
+	data["aimbot"]["draw_fov"] = cfg::aimbot::draw_fov;
 	data["aimbot"]["anti_recoil"] = cfg::aimbot::anti_recoil;
 	data["aimbot"]["auto_rebound"] = cfg::aimbot::auto_rebound;
 	data["aimbot"]["pattern_scale"] = cfg::aimbot::pattern_scale;
+
+	// triggerbot
+	data["triggerbot"]["enabled"] = cfg::triggerbot::enabled;
+	data["triggerbot"]["ignore_team"] = cfg::triggerbot::ignore_team;
+	data["triggerbot"]["delay"] = cfg::triggerbot::delay;
+
+	// bhop
+	data["bhop"]["enabled"] = cfg::bhop::enabled;
+
+	// antiflash
+	data["antiflash"]["enabled"] = cfg::antiflash::enabled;
 
 	f << std::setw(4) << data << std::endl;
 	f.close();
