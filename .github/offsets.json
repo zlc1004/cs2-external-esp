@@ -1,0 +1,51 @@
+{
+  "version": "1.0",
+  "timestamp": null,
+  "client_dll": {
+    "offsets": {
+      "dwEntityList": 38462056,
+      "dwViewMatrix": 36761376,
+      "dwLocalPlayerController": 36647288,
+      "dwGlobalVars": 33936832,
+      "dwPlantedC4": 36792128,
+      "dwViewAngles": 36804168,
+      "dwLocalPlayerPawn": 33983328
+    },
+    "classes": {
+      "CCSPlayerController": {
+        "m_iPing": 2088,
+        "m_pInGameMoneyServices": 2056
+      },
+      "CCSPlayerController_InGameMoneyServices": {
+        "m_iAccount": 64
+      },
+      "C_BaseEntity": {
+        "m_iHealth": 852,
+        "m_iTeamNum": 1011,
+        "m_pGameSceneNode": 824
+      },
+      "C_CSPlayerPawn": {
+        "m_bIsScoped": 9976,
+        "m_iShotsFired": 9996,
+        "m_ArmorValue": 10028,
+        "m_bIsDefusing": 9978,
+        "m_pClippingWeapon": 15808,
+        "m_entitySpottedState": 9952,
+        "m_aimPunchAngle": 5836,
+        "m_iIDEntIndex": 16044,
+        "m_vecLastClipCameraPos": 15780,
+        "m_angEyeAngles": 15824
+      },
+      "EntitySpottedState_t": {
+        "m_bSpottedByMask": 12
+      },
+      "C_PlantedC4": {
+        "m_bC4Activated": 4536,
+        "m_nBombSite": 4468
+      },
+      "CGameSceneNode": {
+        "m_vecAbsOrigin": 208
+      }
+    }
+  }
+}
