@@ -3,6 +3,9 @@
 #include "core/offsets/Dumper.hpp"
 #include "core/engine/cache/Cache.hpp"
 #include "core/engine/features/Aimbot.hpp"
+#include "core/engine/features/TriggerBot.hpp"
+#include "core/engine/features/AntiFlash.hpp"
+#include "core/engine/features/Bhop.hpp"
 
 bool Engine::Init() {
     return GetInstance().InitImpl();
@@ -38,6 +41,12 @@ bool Engine::InitImpl() {
         return false;
     }
 
+    // NEW: Fetch offsets from cs2-dumper for auto-update (non-blocking, optional)
+    LOGF(INFO, "Checking for offset updates from cs2-dumper...");
+    if (!Dumper::FetchOffsetsFromCS2Dumper()) {
+        LOGF(INFO, "Offset auto-update skipped or failed, using built-in offsets");
+    }
+
     if (!Config::Read()) 
         LOGF(WARNING, "Failed to parse config, using default values");
 
@@ -59,6 +68,9 @@ void Engine::Thread() {
     while (true) {
         Cache::Refresh();
         Aimbot::Run();
+        TriggerBot::Run();
+        AntiFlash::Run();
+        Bhop::Run();
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
 }
