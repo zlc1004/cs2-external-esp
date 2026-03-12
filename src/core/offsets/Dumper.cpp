@@ -92,12 +92,15 @@ bool Dumper::InitImpl() {
     LOGF(VERBOSE, "Using 'localPlayerPawn' offset: 0x{:X}", offsets::localPlayerPawn);
 
     // ForceJump - For bunnyhopping
+    // Try signature scan first
     if (!(temp = Scan(offsets::signatures::forceJump, client))) {
-        LOGF(WARNING, "Could not find offset for 'forceJump' - Bhop will be disabled");
-        offsets::forceJump = 0;
+        // Fallback to hardcoded offset from buttons.json (Build 14139)
+        // This is the "jump" button address
+        offsets::forceJump = 0x2061E00;
+        LOGF(INFO, "Using hardcoded 'forceJump' offset: 0x{:X}", offsets::forceJump);
     } else {
         offsets::forceJump = temp - client.base + 0x30;
-        LOGF(VERBOSE, "Found 'forceJump' offset at 0x{:X}", offsets::forceJump);
+        LOGF(INFO, "Found 'forceJump' offset via signature: 0x{:X}", offsets::forceJump);
     }
 
     // engine2.dll

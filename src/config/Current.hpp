@@ -43,10 +43,11 @@ namespace cfg {
 		inline bool vis_check = false;
 		inline bool ignore_team = true;
 		inline float fov = 5.0f;
-		inline float smooth = 1.0f;
+		inline float smooth = 0.3f; // FIXED: was 1.0 which caused issues (0.0=instant, 0.9=very smooth)
 		inline int bone = 6; // head
-		inline float rcs_scale = 1.0f; // RCS scale factor (0.0 - 2.0)
+		inline float rcs_scale = 0.5f; // RCS scale factor (0.0 - 2.0) - Recommended: 0.3-0.7
 		inline bool draw_fov = false; // Draw FOV circle on screen
+		inline int mode = 0; // 0 = Hold Key (C), 1 = Auto on Shoot
 		
 		// Anti-recoil settings
 		inline bool anti_recoil = false;       // Enable pattern-based anti-recoil

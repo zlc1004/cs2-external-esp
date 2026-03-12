@@ -56,3 +56,21 @@ bool Game::SetViewAngle(float pitch, float yaw) {
 	// Use protected write with VirtualProtectEx
 	return p->write_protected<Vec2>(client.base + offsets::viewAngles, angle);
 }
+
+bool Game::GetViewAngles(float& pitch, float& yaw) {
+	auto p = Engine::GetProcess();
+	auto client = Engine::GetClient();
+	
+	if (!p || client.base == 0 || offsets::viewAngles == 0)
+		return false;
+	
+	struct Vec2 {
+		float x, y;
+	};
+	
+	Vec2 angle = p->read<Vec2>(client.base + offsets::viewAngles);
+	pitch = angle.x;
+	yaw = angle.y;
+	
+	return true;
+}

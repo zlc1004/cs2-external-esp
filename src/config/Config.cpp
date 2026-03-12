@@ -79,6 +79,7 @@ bool Config::ReadImpl() {
 		cfg::aimbot::smooth = data["aimbot"].value("smooth", 1.0f);
 		cfg::aimbot::bone = data["aimbot"].value("bone", 6);
 		cfg::aimbot::draw_fov = data["aimbot"].value("draw_fov", false);
+		cfg::aimbot::mode = data["aimbot"].value("mode", 0);
 		cfg::aimbot::anti_recoil = data["aimbot"].value("anti_recoil", false);
 		cfg::aimbot::auto_rebound = data["aimbot"].value("auto_rebound", true);
 		cfg::aimbot::pattern_scale = data["aimbot"].value("pattern_scale", 1.0f);
@@ -93,6 +94,11 @@ bool Config::ReadImpl() {
 
 		// antiflash
 		cfg::antiflash::enabled = data["antiflash"].value("enabled", false);
+		
+		// Debug: Log loaded aimbot values
+		LOGF(INFO, "[CONFIG DEBUG] Loaded aimbot.smooth = {:.2f}", cfg::aimbot::smooth);
+		LOGF(INFO, "[CONFIG DEBUG] Loaded aimbot.fov = {:.2f}", cfg::aimbot::fov);
+		LOGF(INFO, "[CONFIG DEBUG] Loaded aimbot.rcs_scale = {:.2f}", cfg::aimbot::rcs_scale);
 	} catch (const std::exception& e) {
 		LOGF(FATAL, "Failed to parse configuration");
 		WriteImpl();
@@ -155,6 +161,7 @@ bool Config::WriteImpl() {
 	data["aimbot"]["smooth"] = cfg::aimbot::smooth;
 	data["aimbot"]["bone"] = cfg::aimbot::bone;
 	data["aimbot"]["draw_fov"] = cfg::aimbot::draw_fov;
+	data["aimbot"]["mode"] = cfg::aimbot::mode;
 	data["aimbot"]["anti_recoil"] = cfg::aimbot::anti_recoil;
 	data["aimbot"]["auto_rebound"] = cfg::aimbot::auto_rebound;
 	data["aimbot"]["pattern_scale"] = cfg::aimbot::pattern_scale;

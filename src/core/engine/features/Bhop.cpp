@@ -9,12 +9,19 @@
 constexpr uint32_t FL_ONGROUND = (1 << 0);
 
 void Bhop::Run() {
+    static int debug_count = 0;
+    
     if (!cfg::bhop::enabled)
         return;
 
     // Check if forceJump offset is valid
-    if (offsets::forceJump == 0)
+    if (offsets::forceJump == 0) {
+        if (debug_count < 3) {
+            LOGF(WARNING, "[Bhop] ForceJump offset is 0 - bhop disabled");
+            debug_count++;
+        }
         return;
+    }
 
     auto cache = Cache::CopySnapshot();
     auto p = Engine::GetProcess();
@@ -38,6 +45,12 @@ void Bhop::Run() {
     // Check if space is pressed
     bool space_pressed = (GetAsyncKeyState(VK_SPACE) & 0x8000) != 0;
     
+    static bool logged_first_press = false;
+    if (space_pressed && !logged_first_press) {
+        LOGF(INFO, "[Bhop] Space pressed - ForceJump address: 0x{:X}", client.base + offsets::forceJump);
+        logged_first_press = true;
+    }
+    
     if (!space_pressed) {
         // Reset force jump when space is released
         p->write<int>(client.base + offsets::forceJump, 0);
@@ -48,26 +61,19 @@ void Bhop::Run() {
     // Check if player is in air
     bool is_in_air = IsPlayerInAir(local_player);
     
-    if (space_pressed && is_in_air) {
-        // Player is in air and holding space - wait then force jump
-        auto now = std::chrono::steady_clock::now();
-        auto time_since_last_jump = std::chrono::duration_cast<std::chrono::milliseconds>(now - last_jump_time).count();
-        
-        if (time_since_last_jump >= 5) {
-            p->write<int>(client.base + offsets::forceJump, 65537); // Force jump
-            last_jump_time = now;
-            was_in_air = true;
-        }
+    static int air_log_count = 0;
+    if (space_pressed && air_log_count < 10) {
+        LOGF(INFO, "[Bhop] In air: {} | Writing: {}", is_in_air, is_in_air ? 65537 : 256);
+        air_log_count++;
     }
-    else if (space_pressed && !is_in_air) {
-        // Player is on ground and pressing space - normal jump
+    
+    // Simple logic: if on ground, jump. If in air, force jump on next frame
+    if (!is_in_air) {
+        // On ground - trigger jump
         p->write<int>(client.base + offsets::forceJump, 256);
-        was_in_air = false;
-    }
-    else if (!space_pressed && was_in_air) {
-        // Space released after being in air
-        p->write<int>(client.base + offsets::forceJump, 256);
-        was_in_air = false;
+    } else {
+        // In air - prepare for next jump
+        p->write<int>(client.base + offsets::forceJump, 65537);
     }
 }
 

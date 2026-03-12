@@ -182,6 +182,15 @@ void Menu::RenderImpl() {
 				ImGui::Checkbox("Aimbot Enabled", &cfg::aimbot::enabled);
 				ImGui::BeginDisabled(!cfg::aimbot::enabled);
 				{
+					// Aimbot Mode selector
+					const char* modes[] = { "Hold Key (C)", "Auto on Shoot" };
+					ImGui::Combo("Activation Mode", &cfg::aimbot::mode, modes, IM_ARRAYSIZE(modes));
+					if (cfg::aimbot::mode == 0) {
+						ImGui::SetItemTooltip("Press and hold 'C' key to aim at target");
+					} else {
+						ImGui::SetItemTooltip("Automatically aims when you start shooting");
+					}
+					
 					ImGui::Checkbox("RCS", &cfg::aimbot::rcs);
 					ImGui::SetItemTooltip("Standard Recoil Control System (aim punch based)");
 					
@@ -194,6 +203,8 @@ void Menu::RenderImpl() {
 					ImGui::Checkbox("Ignore Team", &cfg::aimbot::ignore_team);
 					ImGui::SliderFloat("FOV", &cfg::aimbot::fov, 0.1f, 100.0f, "%.1f");
 					ImGui::SetItemTooltip("Field of view for aimbot activation (degrees)");
+					ImGui::SliderFloat("Smooth", &cfg::aimbot::smooth, 0.0f, 0.9f, "%.2f");
+					ImGui::SetItemTooltip("Aim smoothing (0.0 = instant snap, 0.9 = very smooth)");
 					ImGui::Checkbox("Draw FOV Circle", &cfg::aimbot::draw_fov);
 					ImGui::SetItemTooltip("Show FOV circle on screen");
 					
