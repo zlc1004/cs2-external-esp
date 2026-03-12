@@ -9,6 +9,9 @@ public:
     bool Update();
     bool UpdateMatrix();
     bool UpdateEntityList();
+    
+    // NEW: SetViewAngle for recoil control (replaces mouse_event)
+    bool SetViewAngle(float pitch, float yaw);
 
 public:
     view_matrix_t view_matrix;

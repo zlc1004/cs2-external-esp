@@ -115,6 +115,33 @@ public:
 #endif
 	}
 
+	// Protected write: Changes memory protection before writing, then restores it
+	// Use this for protected memory regions like ViewAngles
+	template<class T>
+	bool write_protected(uintptr_t address, T value)
+	{
+#ifdef _WIN32
+		DWORD oldProtect = 0;
+		
+		// Step 1: Change memory protection to writable
+		if (!VirtualProtectEx(handle_, (PVOID)address, sizeof(T), PAGE_EXECUTE_READWRITE, &oldProtect)) {
+			return false;
+		}
+		
+		// Step 2: Write the value
+		pMemory cMemory;
+		NTSTATUS status = cMemory.pfnNtWriteVirtualMemory(handle_, (void*)address, &value, sizeof(T), 0);
+		
+		// Step 3: Restore original protection
+		DWORD temp;
+		VirtualProtectEx(handle_, (PVOID)address, sizeof(T), oldProtect, &temp);
+		
+		return status == 0; // STATUS_SUCCESS
+#else
+		return false;
+#endif
+	}
+
 	template<class T>
 	T read(uintptr_t address)
 	{
