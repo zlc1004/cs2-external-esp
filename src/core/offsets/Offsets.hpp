@@ -5,12 +5,15 @@
 
 namespace offsets
 {
-	// client.dll
+	// client.dll - Dynamically scanned
 	inline uintptr_t entityList;
 	inline uintptr_t viewMatrix;
 	inline uintptr_t localPlayerController;
 	inline uintptr_t globalVars;
 	inline uintptr_t plantedC4;
+	inline uintptr_t viewAngles; // CRITICAL: For SetViewAngle
+	inline uintptr_t localPlayerPawn; // For direct pawn access
+	inline uintptr_t forceJump; // For bunnyhopping
 
 	// engine2.dll
 	inline uintptr_t buildNumber;
@@ -43,8 +46,17 @@ namespace offsets
 		constexpr std::ptrdiff_t m_entitySpottedState = 0x26E0; // EntitySpottedState_t
 		constexpr std::ptrdiff_t m_bSpottedByMask = 0xC; // uint32[2] - EntitySpottedState_t
 		constexpr std::ptrdiff_t m_flFlashOverlayAlpha = 0x15EC; // float32 - C_CSPlayerPawnBase 
-		constexpr std::ptrdiff_t m_aimPunchAngle = 0x1508; // QAngle
-		constexpr std::ptrdiff_t m_iShotsFired = 0x22B4; // int32
+		constexpr std::ptrdiff_t m_aimPunchAngle = 0x16CC; // QAngle - FIXED from 0x1508 (was wrong!)
+		constexpr std::ptrdiff_t m_iShotsFired = 0x270C; // int32 - FIXED from 0x22B4 (was wrong!)
+		
+		// NEW: Missing offsets needed for features
+		constexpr std::ptrdiff_t m_iIDEntIndex = 0x3EAC; // int32 - For TriggerBot (crosshair entity)
+		constexpr std::ptrdiff_t m_flFlashDuration = 0x15F8; // float32 - For Anti-Flash
+		constexpr std::ptrdiff_t m_aimPunchCache = 0x1738; // CUtlVector - For advanced RCS
+		constexpr std::ptrdiff_t m_vecLastClipCameraPos = 0x3DA4; // Vector - Camera position (UPDATED)
+		constexpr std::ptrdiff_t m_angEyeAngles = 0x3DD0; // QAngle - Eye angles (UPDATED from 0x1510)
+		constexpr std::ptrdiff_t m_fFlags = 0x3C8; // uint32 - Player flags (FL_ONGROUND, etc.)
+		constexpr std::ptrdiff_t m_vecViewOffset = 0xD58; // CNetworkViewOffsetVector - View height offset (accounts for crouch)
 
 
 #if 0
@@ -93,6 +105,12 @@ namespace offsets
 		const std::string entityList = "48 8B 0D ?? ?? ?? ?? 48 89 7C 24 ?? 8B FA C1 EB";
 		const std::string localPlayerController = "48 8B 05 ?? ?? ?? ?? 41 89 BE";
 		const std::string plantedC4 = "48 8b 15 ?? ?? ?? ?? 41 FF C0 48 8D 4C 24 ?? 44 89 05 ?? ?? ?? ??"; // 488b15${'} 41ffc0 488d4c24? 448905[4]
+		
+		// NEW: Critical signatures for SetViewAngle and features
+		const std::string viewAngles = "48 8B 0D ?? ?? ?? ?? E9 ?? ?? ?? ?? CC CC CC CC 40 55"; // CRITICAL for SetViewAngle!
+		const std::string localPlayerPawn = "48 8D 05 ?? ?? ?? ?? C3 CC CC CC CC CC CC CC CC 48 83 EC ?? 8B 0D"; // Direct pawn access
+		const std::string forceJump = "48 8B 05 ?? ?? ?? ?? 48 8D 1D ?? ?? ?? ?? 48 89 45"; // For bunnyhopping (optional)
+		
 		const std::string weaponC4 = // 488b15${'} 41ffc0 488d4c24? 448905[4]
 			"48 89 05 ?? ?? ?? ?? "
 			"F7 C1 ?? ?? ?? ?? "

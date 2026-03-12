@@ -13,6 +13,7 @@ public:
     Dumper& operator=(Dumper&&)      = delete;
 
    static bool Init();
+   static bool FetchOffsetsFromCS2Dumper(); // NEW: Auto-update offsets from cs2-dumper repo
 private:
     Dumper() {};
 
@@ -23,6 +24,7 @@ private:
     }
 
     bool InitImpl();
+    bool FetchOffsetsFromCS2DumperImpl();
 private:
     std::vector<WORD> StrSigToArray(const std::string& sig);
     DWORD64 Scan(const std::string sig, ProcessModule module);
