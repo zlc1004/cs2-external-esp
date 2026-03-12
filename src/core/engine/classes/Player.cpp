@@ -116,6 +116,8 @@ bool Player::UpdatePawn() {
 	this->scoped = p->read<bool>(pawn + offsets::pawn::m_bIsScoped);
 	this->shots_fired = p->read<int>(pawn + offsets::pawn::m_iShotsFired);
 	this->aim_punch = p->read<Vec3_t>(pawn + offsets::pawn::m_aimPunchAngle);
+	this->eye_angles = p->read<Vec2_t>(pawn + offsets::pawn::m_angEyeAngles);
+	this->view_offset = p->read<Vec3_t>(pawn + offsets::pawn::m_vecViewOffset);
 
 	if (!UpdateSkeleton()) {
 		LOGF(FATAL, "Failed to update skeleton");

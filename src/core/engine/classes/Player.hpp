@@ -7,9 +7,14 @@ public:
 
     bool Update();
     bool GetBounds(view_matrix_t matrix, Vec2_t size, std::pair<Vec2_t, Vec2_t>& bounds);
+    
+    // Getter for pawn address (needed for TriggerBot and AntiFlash)
+    uintptr_t GetPawnAddress() const { return pawn; }
 public:
     Vec3_t pos;
     Vec3_t aim_punch;
+    Vec2_t eye_angles; // Current view angles (pitch, yaw)
+    Vec3_t view_offset; // View height offset (changes with crouch)
 
     int ping = 0;
     int team = 0;
